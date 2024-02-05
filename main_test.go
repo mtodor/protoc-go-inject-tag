@@ -154,7 +154,9 @@ func TestParseWriteFileClearCommon(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	expectedExpr := "Address[ \t]+string[ \t]+`protobuf:\"bytes,1,opt,name=Address,proto3\" json:\"overrided\" valid:\"ip\" yaml:\"ip\"`"
+
+	// With "\n" we want to ensure that there are not trailing spaces.
+	expectedExpr := "Address[ \t]+string[ \t]+`protobuf:\"bytes,1,opt,name=Address,proto3\" json:\"overrided\" valid:\"ip\" yaml:\"ip\"`\\n"
 	matched, err := regexp.Match(expectedExpr, contents)
 	if err != nil || matched != true {
 		t.Error("file doesn't contains custom tag after writing")

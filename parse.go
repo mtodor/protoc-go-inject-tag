@@ -73,7 +73,7 @@ func injectTag(contents []byte, area textArea, removeTagComment bool) (injected 
 	if removeTagComment {
 		strippedComment := make([]byte, area.CommentEnd-area.CommentStart)
 		copy(strippedComment, contents[area.CommentStart-1:area.CommentEnd-1])
-		strippedComment = rAll.ReplaceAll(expr, []byte(" "))
+		strippedComment = rAll.ReplaceAll(expr, []byte(""))
 		if area.CommentStart < area.Start {
 			injected = append(injected, contents[:area.CommentStart-1]...)
 			injected = append(injected, strippedComment...)
@@ -83,7 +83,9 @@ func injectTag(contents []byte, area textArea, removeTagComment bool) (injected 
 		} else {
 			injected = append(injected, contents[:area.Start-1]...)
 			injected = append(injected, expr...)
-			injected = append(injected, contents[area.End-1:area.CommentStart-1]...)
+			if len(strippedComment) > 0 {
+				injected = append(injected, contents[area.End-1:area.CommentStart-1]...)
+			}
 			injected = append(injected, strippedComment...)
 			injected = append(injected, contents[area.CommentEnd-1:]...)
 		}
